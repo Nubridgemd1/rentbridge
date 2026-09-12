@@ -797,7 +797,7 @@ function calcMax(){
   const income=num(document.getElementById('income')?.value||0);
   let max=rent;
   if(income){ max=Math.min(rent, Math.round(income*0.5)); }
-  document.getElementById('maxNote').innerHTML='We can advance up to <b>'+fmt0(max)+'</b> based on one month's rent'+(income?' and your income':'')+'. Funds go straight to your landlord.';
+  document.getElementById('maxNote').innerHTML='We can advance up to <b>'+fmt0(max)+'</b> based on one month\'s rent'+(income?' and your income':'')+'. Funds go straight to your landlord.';
 }
 
 /* ---------- wizard ---------- */
@@ -877,7 +877,7 @@ function accept(){
   try{localStorage.setItem('rb-loan',JSON.stringify(loan))}catch(e){}
   document.getElementById('c-amt').textContent=fmt(offer.approved);
   document.getElementById('c-first').textContent=mdy(offer.sched[0].date);
-  document.getElementById('confirmMsg').textContent='We've sent '+fmt(offer.approved)+' directly to '+offer.landlord+'. Your autopay is set - you're all done.';
+  document.getElementById('confirmMsg').textContent='We\'ve sent '+fmt(offer.approved)+' directly to '+offer.landlord+'. Your autopay is set - you\'re all done.';
   renderDash(loan);
   step=5; showStep();
 }
@@ -926,11 +926,11 @@ function payNow(){
 
 /* ---------- security features ---------- */
 const SEC=[
-  ['Direct-to-landlord disbursement','Funds are paid straight to the landlord for rent, never to the renter's spending account.','Removes diversion &amp; misuse risk','shield'],
+  ['Direct-to-landlord disbursement','Funds are paid straight to the landlord for rent, never to the renter\'s spending account.','Removes diversion &amp; misuse risk','shield'],
   ['Mandatory card on file + autopay','A card is required and a recurring autopay mandate is signed before funding.','Guarantees a repayment rail','card'],
   ['ACH backup + smart retries','Optional linked bank account backs up the card; failed charges auto-retry on payday.','Cuts involuntary misses','repeat'],
   ['Income &amp; cash-flow underwriting','Bank connection verifies real income and affordability, not just a stated figure.','Prevents over-lending','bank'],
-  ['Affordability caps','Advance limited to one month's rent and a share of verified income.','Keeps exposure per renter low','gauge'],
+  ['Affordability caps','Advance limited to one month\'s rent and a share of verified income.','Keeps exposure per renter low','gauge'],
   ['Payday-aligned installments','Repayments land right after the renter is paid, when funds are present.','Raises on-time success','calendar'],
   ['Credit-bureau reporting','On-time repayment builds credit; default is reported.','Strong repay incentive','trend'],
   ['KYC, fraud &amp; device checks','Identity, selfie match, velocity limits and device signals screen out fraud.','Blocks first-party &amp; synthetic fraud','fingerprint'],
