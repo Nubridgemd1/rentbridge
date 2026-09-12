@@ -276,8 +276,7 @@ tr:last-child td{border-bottom:0}
   .top .spacer{display:none}
   .brand{font-size:1.06rem}
   .demo-pill{margin-left:auto}
-  .tabs{order:5;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;
-    -webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
+  .tabs{order:5;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
   .tabs::-webkit-scrollbar{display:none}
   .tabs button{white-space:nowrap;flex:0 0 auto}
   .section-h{flex-wrap:wrap}
@@ -794,7 +793,8 @@ const mdy=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 /* ---------- step 1 max ---------- */
 function calcMax(){
   const rent=num(document.getElementById('rent').value);
-  const income=num(document.getElementById('income')?.value||0);
+  var _inc=document.getElementById('income');
+  const income=num(_inc?_inc.value:0);
   let max=rent;
   if(income){ max=Math.min(rent, Math.round(income*0.5)); }
   document.getElementById('maxNote').innerHTML='We can advance up to <b>'+fmt0(max)+'</b> based on one month\'s rent'+(income?' and your income':'')+'. Funds go straight to your landlord.';
