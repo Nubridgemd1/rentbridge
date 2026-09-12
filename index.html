@@ -259,6 +259,38 @@ tr:last-child td{border-bottom:0}
 .section-title{text-align:center;margin:34px 0 16px}
 .section-title .eyebrow{display:block;margin-bottom:5px}
 .section-title h2{font-size:1.5rem}
+
+/* ---- responsive / mobile polish ---- */
+@media(max-width:760px){
+  main{padding:18px 15px 76px}
+  .top-in{flex-wrap:wrap;gap:9px 12px;padding:10px 15px}
+  .top .spacer{display:none}
+  .brand{font-size:1.06rem}
+  .demo-pill{margin-left:auto}
+  .tabs{order:5;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;
+    -webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{white-space:nowrap;flex:0 0 auto}
+  .section-h{flex-wrap:wrap}
+  .hero h1{font-size:2rem}
+  .hero .sub{font-size:1rem}
+  .sec-grid,.docgrid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .big-amt{font-size:2.05rem}
+  .section-h .btn{width:100%}
+  #schedTable th:nth-child(3),#schedTable td:nth-child(3){display:none}
+  .hero-cta .btn,.aud-card .btn{width:100%}
+  .band{flex-direction:column;align-items:flex-start;gap:14px}
+  .band .btn{width:100%}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  /* prevent iOS zoom-on-focus (inputs must be ≥16px) */
+  .field input,.field select,.field textarea,#ll-bank,#ach-bank{font-size:16px}
+}
+@media(hover:none){
+  .btn:active{transform:translateY(1px)}
+  .tabs button{padding:9px 14px}
+}
 </style>
 
 <div class="top">
