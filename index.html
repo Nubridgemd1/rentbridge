@@ -298,8 +298,14 @@ tr:last-child td{border-bottom:0}
 }
 @media(hover:none){
   .btn:active{transform:translateY(1px)}
-  .tabs button{padding:9px 14px}
+  .btn{min-height:46px}
+  .tabs button{padding:10px 15px;min-height:44px}
+  .icon-btn,.themeb{min-width:44px;min-height:44px}
+  .verify-item button,.dz-btn,.btn-ghost{min-height:44px}
+  a{touch-action:manipulation}
+  button{touch-action:manipulation}
 }
+.tabs button,.btn,.icon-btn{touch-action:manipulation}
 
 /* ---- iOS refinements ---- */
 html{-webkit-text-size-adjust:100%}
@@ -316,17 +322,17 @@ input[type="date"]{min-height:46px}
 
 <div class="top">
   <div class="top-in">
-    <div class="brand" style="cursor:pointer" onclick="go('landing',document.querySelectorAll('.tabs button')[0])">
+    <div class="brand" style="cursor:pointer" onclick="go('landing')">
       <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
       RentBridge
     </div>
     <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" onclick="go('landing',this)">Home</button>
-      <button role="tab" aria-selected="false" onclick="go('dashboard',this)">My dashboard</button>
-      <button role="tab" aria-selected="false" onclick="go('apply',this)">Apply</button>
-      <button role="tab" aria-selected="false" onclick="go('how',this)">How it works</button>
-      <button role="tab" aria-selected="false" onclick="go('landlord',this)">For landlords</button>
-      <button role="tab" aria-selected="false" onclick="go('lender',this)">Lender controls</button>
+      <button role="tab" aria-selected="true" onclick="go('landing')">Home</button>
+      <button role="tab" aria-selected="false" onclick="go('dashboard')">My dashboard</button>
+      <button role="tab" aria-selected="false" onclick="go('apply')">Apply</button>
+      <button role="tab" aria-selected="false" onclick="go('how')">How it works</button>
+      <button role="tab" aria-selected="false" onclick="go('landlord')">For landlords</button>
+      <button role="tab" aria-selected="false" onclick="go('lender')">Lender controls</button>
     </div>
     <span class="spacer"></span>
     <span class="demo-pill">Prototype</span>
@@ -345,8 +351,8 @@ input[type="date"]{min-height:46px}
         <h1>Rent is due Friday.<br>Your paycheck isn't.</h1>
         <p class="sub">RentBridge advances up to a month's rent, pays it <b>straight to your landlord</b>, and collects repayment automatically from a card on file - approved in under two minutes.</p>
         <div class="hero-cta">
-          <button class="btn btn-primary" onclick="go('apply',document.querySelectorAll('.tabs button')[2])">Get rent help</button>
-          <button class="btn btn-ghost" onclick="go('landlord',document.querySelectorAll('.tabs button')[4])">I'm a landlord</button>
+          <button class="btn btn-primary" onclick="go('apply')">Get rent help</button>
+          <button class="btn btn-ghost" onclick="go('landlord')">I'm a landlord</button>
         </div>
         <div class="trust">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg> Bank-grade security</span>
@@ -382,13 +388,13 @@ input[type="date"]{min-height:46px}
         <h3>Renters</h3>
         <p>A safety net for the months money's tight - without payday-loan rates.</p>
         <ul><li>Up to one month's rent, on demand</li><li>Small, payday-aligned repayments</li><li>On-time payments build your credit</li></ul>
-        <button class="btn btn-primary" onclick="go('apply',document.querySelectorAll('.tabs button')[2])">Get rent help</button>
+        <button class="btn btn-primary" onclick="go('apply')">Get rent help</button>
       </div>
       <div class="card aud-card" style="border-top-color:var(--amber)">
         <h3>Landlords &amp; partners</h3>
         <p>Get rent on time, deposited directly - and stop chasing payments. Free to join.</p>
         <ul><li>Rent paid to your account on the due date</li><li>Choose ACH, card, PayPal, Zelle &amp; more</li><li>Invite tenants with one enrollment link</li></ul>
-        <button class="btn btn-ghost" onclick="go('landlord',document.querySelectorAll('.tabs button')[4])">Enroll your property</button>
+        <button class="btn btn-ghost" onclick="go('landlord')">Enroll your property</button>
       </div>
     </div>
 
@@ -402,12 +408,12 @@ input[type="date"]{min-height:46px}
         <div class="node"><div class="num">5</div><h4>Disburse</h4><p>Paid to landlord</p></div>
         <div class="node"><div class="num">6</div><h4>Auto-repay</h4><p>Charged  closed</p></div>
       </div>
-      <div style="text-align:center;margin-top:16px"><button class="btn btn-ghost" onclick="go('how',document.querySelectorAll('.tabs button')[3])">See how it works</button></div>
+      <div style="text-align:center;margin-top:16px"><button class="btn btn-ghost" onclick="go('how')">See how it works</button></div>
     </div>
 
     <div class="band" style="margin-top:28px">
       <div><h3 style="margin-bottom:4px">Ready to cover this month's rent?</h3><div style="font-size:.9rem;opacity:.85">Two-minute application. Nothing charged until your first scheduled repayment.</div></div>
-      <button class="btn btn-primary" onclick="go('apply',document.querySelectorAll('.tabs button')[2])">Start application</button>
+      <button class="btn btn-primary" onclick="go('apply')">Start application</button>
     </div>
 
     <div class="sec-strip" style="margin-top:22px">
@@ -424,7 +430,7 @@ input[type="date"]{min-height:46px}
         <div class="eyebrow">Your rent loan</div>
         <h1 style="font-size:1.5rem;margin-top:3px">Dashboard</h1>
       </div>
-      <button class="btn btn-primary" onclick="go('apply',document.querySelectorAll('.tabs button')[1])">New rent request</button>
+      <button class="btn btn-primary" onclick="go('apply')">New rent request</button>
     </div>
 
     <div class="dash-top">
@@ -585,7 +591,7 @@ input[type="date"]{min-height:46px}
           <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted)">First autopay</span><b id="c-first">-</b></div>
           <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Card on file</span><b class="mono">Visa **** 4242</b></div>
         </div>
-        <button class="btn btn-primary" onclick="go('dashboard',document.querySelectorAll('.tabs button')[0])">Go to my dashboard</button>
+        <button class="btn btn-primary" onclick="go('dashboard')">Go to my dashboard</button>
       </div>
     </div>
   </section>
@@ -763,11 +769,17 @@ function toggleTheme(){
 try{const t=localStorage.getItem('rb-theme'); if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
 
 /* ---------- nav ---------- */
-function go(v,btn){
-  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
-  document.getElementById('view-'+v).classList.add('active');
-  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected','false'));
-  if(btn)btn.setAttribute('aria-selected','true');
+function go(v){
+  var el=document.getElementById('view-'+v);
+  if(!el) return;
+  document.querySelectorAll('.view').forEach(function(s){s.classList.remove('active');});
+  el.classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(function(b){
+    var oc=b.getAttribute('onclick')||'';
+    b.setAttribute('aria-selected', oc.indexOf("go('"+v+"'")===0 ? 'true':'false');
+  });
+  var t=document.querySelector('.tabs button[aria-selected="true"]');
+  if(t && t.scrollIntoView) t.scrollIntoView({inline:'center',block:'nearest'});
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
