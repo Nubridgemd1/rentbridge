@@ -208,7 +208,11 @@ tr:last-child td{border-bottom:0}
 .rb .n{font-family:var(--mono);text-align:right;color:var(--ink-2)}
 
 .callout{background:var(--teal-wash);border:1px solid color-mix(in srgb,var(--teal) 25%,transparent);border-radius:var(--r-sm);padding:14px 16px;font-size:.88rem;color:var(--ink-2)}
-.foot{color:var(--muted);font-size:.8rem;text-align:center;padding:26px 20px 0;max-width:1080px;margin:0 auto}
+.foot{color:var(--muted);font-size:.8rem;text-align:center;padding:26px 20px 14px;max-width:1080px;margin:0 auto}
+.bfc{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:9px;padding:18px 20px 30px;color:var(--muted);font-size:.85rem}
+.bfc a{color:var(--ink);font-weight:700;text-decoration:none}
+.bfc a:hover{color:var(--teal-d)}
+.bfc .bmk{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--teal),var(--teal-bright));display:inline-grid;place-items:center;color:#fff;font-family:var(--disp);font-weight:700;font-size:.74rem}
 .hidden{display:none}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120%);background:var(--ink);color:var(--ground);padding:13px 20px;border-radius:11px;box-shadow:var(--shadow-lg);font-size:.9rem;font-weight:500;z-index:60;transition:transform .3s;max-width:90vw}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -726,6 +730,7 @@ tr:last-child td{border-bottom:0}
 
   <div class="foot">RentBridge is a product prototype for demonstration. No real accounts, cards, or funds are processed.</div>
 </main>
+<div class="bfc"><span class="bmk">B</span> A <a href="https://bizformcorp.com" target="_blank" rel="noopener">BizFormCorp</a> product</div>
 
 <div class="toast" id="toast"></div>
 
