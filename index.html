@@ -1,0 +1,768 @@
+<title>RentBridge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" />
+<style>
+:root{
+  --ink:#0e2a3b; --ink-2:#3a5261; --muted:#66808e;
+  --ground:#f3f6f5; --card:#ffffff; --card-2:#f7faf9; --line:#e0e8e7; --line-2:#d0dcdb;
+  --teal:#0f766e; --teal-d:#0b5c56; --teal-bright:#14b8a6; --teal-wash:#e6f3f1;
+  --amber:#e0a341; --amber-wash:#fbf1dc;
+  --good:#15803d; --good-wash:#e6f4ea; --warn:#b45309; --warn-wash:#fbeede; --bad:#b91c1c; --bad-wash:#fbe9e9;
+  --shadow:0 1px 2px rgba(14,42,59,.06),0 8px 24px rgba(14,42,59,.06);
+  --shadow-lg:0 12px 40px rgba(14,42,59,.14);
+  --r:14px; --r-sm:9px;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --disp:"Sora",var(--sans); --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#eaf2f1; --ink-2:#b7cbc9; --muted:#8aa3a2;
+  --ground:#0b1a1f; --card:#11262b; --card-2:#0e2126; --line:#1e3940; --line-2:#2a4a52;
+  --teal:#2dd4bf; --teal-d:#14b8a6; --teal-bright:#5eead4; --teal-wash:#0f2f30;
+  --amber:#eab35a; --amber-wash:#33270f;
+  --good:#46c46f; --good-wash:#123021; --warn:#d68a2e; --warn-wash:#332512; --bad:#f0736f; --bad-wash:#361a1a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --ink:#eaf2f1; --ink-2:#b7cbc9; --muted:#8aa3a2;
+  --ground:#0b1a1f; --card:#11262b; --card-2:#0e2126; --line:#1e3940; --line-2:#2a4a52;
+  --teal:#2dd4bf; --teal-d:#14b8a6; --teal-bright:#5eead4; --teal-wash:#0f2f30;
+  --amber:#eab35a; --amber-wash:#33270f;
+  --good:#46c46f; --good-wash:#123021; --warn:#d68a2e; --warn-wash:#332512; --bad:#f0736f; --bad-wash:#361a1a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+button{font-family:inherit}
+a{color:var(--teal-d)}
+
+/* ---- top bar ---- */
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:1.12rem;letter-spacing:-.01em;color:var(--ink)}
+.brand .mk{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--teal-bright));display:grid;place-items:center;color:#fff;flex:0 0 auto}
+.brand .mk svg{width:18px;height:18px}
+.tabs{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;color:var(--muted);font-size:.9rem;font-weight:600;padding:8px 13px;border-radius:8px;cursor:pointer}
+.tabs button:hover{color:var(--ink);background:var(--card-2)}
+.tabs button[aria-selected="true"]{color:var(--teal-d);background:var(--teal-wash)}
+.top .spacer{flex:1}
+.icon-btn{border:1px solid var(--line);background:var(--card);color:var(--ink-2);width:38px;height:38px;border-radius:9px;cursor:pointer;display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--line-2)}
+.icon-btn svg{width:17px;height:17px}
+.demo-pill{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-wash);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);padding:3px 8px;border-radius:999px}
+
+main{max-width:1080px;margin:0 auto;padding:26px 20px 80px}
+.view{display:none}
+.view.active{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view.active{animation:none}}
+
+.eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--teal-d)}
+.lead{color:var(--ink-2);font-size:1rem;max-width:64ch}
+.grid{display:grid;gap:16px}
+
+/* ---- cards ---- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:20px}
+.section-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 14px}
+
+/* ---- dashboard ---- */
+.dash-top{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+@media(max-width:800px){.dash-top{grid-template-columns:1fr}}
+.loan-hero{padding:22px;position:relative;overflow:hidden}
+.loan-hero .status-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid transparent}
+.pill.good{color:var(--good);background:var(--good-wash);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.pill.teal{color:var(--teal-d);background:var(--teal-wash);border-color:color-mix(in srgb,var(--teal) 30%,transparent)}
+.pill.amber{color:var(--warn);background:var(--warn-wash);border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.big-amt{font-family:var(--disp);font-weight:700;font-size:2.5rem;letter-spacing:-.02em;line-height:1}
+.sub-amt{color:var(--muted);font-size:.9rem;margin-top:4px}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:var(--r-sm);overflow:hidden;margin-top:18px}
+.mini{background:var(--card);padding:12px 14px}
+.mini .k{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.mini .v{font-family:var(--mono);font-weight:600;font-size:1.02rem;margin-top:3px}
+
+/* progress */
+.prog{height:8px;background:var(--card-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-bright))}
+
+/* card-on-file chip */
+.cof{display:flex;align-items:center;gap:12px;padding:14px;border:1px dashed var(--line-2);border-radius:var(--r-sm);background:var(--card-2)}
+.cof .cc{width:44px;height:30px;border-radius:5px;background:linear-gradient(135deg,var(--ink),var(--teal-d));flex:0 0 auto;position:relative}
+.cof .cc::after{content:"";position:absolute;top:7px;left:5px;width:11px;height:8px;border-radius:2px;background:var(--amber)}
+
+/* schedule table */
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.amt,th.amt{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.tag{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px}
+.tag.paid{color:var(--good);background:var(--good-wash)}
+.tag.due{color:var(--warn);background:var(--warn-wash)}
+.tag.sched{color:var(--muted);background:var(--card-2);border:1px solid var(--line)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;font-size:.92rem;font-weight:600;cursor:pointer;transition:transform .05s,background .15s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line-2)}
+.btn-ghost:hover{border-color:var(--teal)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+/* ---- wizard ---- */
+.wiz{max-width:640px;margin:0 auto}
+.steps{display:flex;gap:6px;margin-bottom:22px}
+.steps .s{flex:1;height:5px;border-radius:999px;background:var(--line)}
+.steps .s.done{background:var(--teal-bright)}
+.steps .s.now{background:var(--teal)}
+.step{display:none}
+.step.active{display:block}
+.step h2{font-size:1.4rem;margin-bottom:4px}
+.step .hint{color:var(--muted);font-size:.9rem;margin-bottom:18px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.field label{font-size:.82rem;font-weight:600;color:var(--ink-2)}
+.field .req{color:var(--bad)}
+.field input,.field select{font-family:inherit;font-size:.98rem;color:var(--ink);background:var(--card-2);border:1px solid var(--line-2);border-radius:10px;padding:12px 13px;width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-wash);background:var(--card)}
+.field .money-in{position:relative}
+.field .money-in span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--mono)}
+.field .money-in input{padding-left:26px;font-family:var(--mono)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.two{grid-template-columns:1fr}}
+.check{display:flex;gap:11px;align-items:flex-start;padding:13px;border:1px solid var(--line-2);border-radius:10px;background:var(--card-2);cursor:pointer;font-size:.9rem}
+.check input{width:19px;height:19px;margin-top:1px;accent-color:var(--teal);flex:0 0 auto}
+.verify-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--card)}
+.verify-item .ic{width:36px;height:36px;border-radius:9px;background:var(--teal-wash);color:var(--teal-d);display:grid;place-items:center;flex:0 0 auto}
+.verify-item .ic svg{width:18px;height:18px}
+.verify-item .t{flex:1}
+.verify-item .t b{display:block;font-size:.92rem}
+.verify-item .t span{font-size:.8rem;color:var(--muted)}
+.verify-item button{font-size:.82rem;font-weight:600;padding:7px 12px;border-radius:8px;border:1px solid var(--teal);background:var(--card);color:var(--teal-d);cursor:pointer}
+.verify-item.done{background:var(--good-wash);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.verify-item.done .ic{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.verify-item.done button{border-color:var(--good);color:var(--good);background:transparent;pointer-events:none}
+
+/* decision */
+.gauge-wrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.gauge{--v:0;width:132px;height:132px;border-radius:50%;flex:0 0 auto;
+  background:conic-gradient(var(--teal) calc(var(--v)*1%),var(--line) 0);display:grid;place-items:center;position:relative}
+.gauge::before{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--card)}
+.gauge .g-in{position:relative;text-align:center}
+.gauge .g-in b{font-family:var(--disp);font-size:2rem;font-weight:700;display:block;line-height:1}
+.gauge .g-in span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* how it works cycle */
+.cycle{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:8px 0 6px;position:relative}
+@media(max-width:860px){.cycle{grid-template-columns:1fr;gap:0}}
+.node{text-align:center;padding:0 8px;position:relative}
+.node .num{width:46px;height:46px;border-radius:50%;margin:0 auto 10px;background:var(--card);border:2px solid var(--teal);color:var(--teal-d);display:grid;place-items:center;font-family:var(--disp);font-weight:700;position:relative;z-index:2}
+.node .num svg{width:20px;height:20px}
+.node h4{font-size:.9rem;margin-bottom:3px}
+.node p{font-size:.8rem;color:var(--muted);margin:0}
+.cycle .node:not(:last-child)::after{content:"";position:absolute;top:23px;left:calc(50% + 30px);right:calc(-50% + 30px);height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-bright));z-index:1}
+@media(max-width:860px){
+  .cycle .node{display:grid;grid-template-columns:46px 1fr;gap:14px;text-align:left;padding:0 0 20px}
+  .node .num{margin:0}
+  .cycle .node:not(:last-child)::after{top:46px;bottom:0;left:22px;right:auto;width:2px;height:auto}
+  .node h4,.node p{grid-column:2}
+}
+.flow-detail{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media(max-width:700px){.flow-detail{grid-template-columns:1fr}}
+.fd{border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 15px;background:var(--card)}
+.fd .n{font-family:var(--disp);font-weight:700;color:var(--teal-d);font-size:.8rem}
+.fd h4{font-size:.95rem;margin:2px 0 5px}
+.fd p{margin:0;font-size:.86rem;color:var(--ink-2)}
+
+/* security grid */
+.sec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:760px){.sec-grid{grid-template-columns:1fr}}
+.sec{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 16px;background:var(--card);display:flex;gap:13px}
+.sec .si{width:38px;height:38px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;background:var(--teal-wash);color:var(--teal-d)}
+.sec .si svg{width:19px;height:19px}
+.sec h4{font-size:.94rem;margin-bottom:4px}
+.sec p{margin:0 0 8px;font-size:.85rem;color:var(--ink-2)}
+.sec .impact{font-size:.74rem;font-weight:600;color:var(--good);background:var(--good-wash);padding:3px 9px;border-radius:999px;display:inline-block}
+
+/* metric tiles (lender) */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px;background:var(--card)}
+.tile .k{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font-family:var(--disp);font-weight:700;font-size:1.7rem;margin-top:5px;letter-spacing:-.01em}
+.tile .v.good{color:var(--good)} .tile .v.teal{color:var(--teal-d)}
+.risk-bars{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.rb{display:grid;grid-template-columns:150px 1fr 42px;gap:10px;align-items:center;font-size:.85rem}
+@media(max-width:520px){.rb{grid-template-columns:110px 1fr 38px}}
+.rb .bar{height:8px;background:var(--card-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.rb .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-bright))}
+.rb .n{font-family:var(--mono);text-align:right;color:var(--ink-2)}
+
+.callout{background:var(--teal-wash);border:1px solid color-mix(in srgb,var(--teal) 25%,transparent);border-radius:var(--r-sm);padding:14px 16px;font-size:.88rem;color:var(--ink-2)}
+.foot{color:var(--muted);font-size:.8rem;text-align:center;padding:26px 20px 0;max-width:1080px;margin:0 auto}
+.hidden{display:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120%);background:var(--ink);color:var(--ground);padding:13px 20px;border-radius:11px;box-shadow:var(--shadow-lg);font-size:.9rem;font-weight:500;z-index:60;transition:transform .3s;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">
+      <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+      RentBridge
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" onclick="go('dashboard',this)">Dashboard</button>
+      <button role="tab" aria-selected="false" onclick="go('apply',this)">Apply</button>
+      <button role="tab" aria-selected="false" onclick="go('how',this)">How it works</button>
+      <button role="tab" aria-selected="false" onclick="go('landlord',this)">For landlords</button>
+      <button role="tab" aria-selected="false" onclick="go('lender',this)">Lender controls</button>
+    </div>
+    <span class="spacer"></span>
+    <span class="demo-pill">Prototype</span>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme" onclick="toggleTheme()" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>
+    </button>
+  </div>
+</div>
+
+<main>
+  <!-- ============ DASHBOARD ============ -->
+  <section class="view active" id="view-dashboard">
+    <div class="section-h">
+      <div>
+        <div class="eyebrow">Your rent loan</div>
+        <h1 style="font-size:1.5rem;margin-top:3px">Dashboard</h1>
+      </div>
+      <button class="btn btn-primary" onclick="go('apply',document.querySelectorAll('.tabs button')[1])">New rent request</button>
+    </div>
+
+    <div class="dash-top">
+      <div class="card loan-hero">
+        <div class="status-row">
+          <span class="pill good"><span class="dot"></span> Active &amp; on track</span>
+          <span class="pill teal" id="autopayPill">Autopay on</span>
+          <span class="pill amber" id="exampleTag">Example loan</span>
+        </div>
+        <div class="big-amt mono" id="loanAmt">$1,850.00</div>
+        <div class="sub-amt">Rent advanced to <b id="landlordName">Parkview Residences</b> · funded <span id="fundedDate">Sep 1</span></div>
+        <div class="mini-grid">
+          <div class="mini"><div class="k">Repaid</div><div class="v" id="repaidV">$972.00</div></div>
+          <div class="mini"><div class="k">Remaining</div><div class="v" id="remainV">$970.50</div></div>
+          <div class="mini"><div class="k">Payments left</div><div class="v" id="leftV">2 of 4</div></div>
+        </div>
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px"><span>Repayment progress</span><span id="progPct">50%</span></div>
+          <div class="prog"><i id="progBar" style="width:50%"></i></div>
+        </div>
+      </div>
+
+      <div class="grid" style="align-content:start">
+        <div class="card pad">
+          <div style="font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Next autopay</div>
+          <div class="big-amt mono" style="font-size:1.7rem;margin-top:6px" id="nextAmt">$485.25</div>
+          <div class="sub-amt" id="nextDate">Charged Sep 26 · card on file</div>
+          <div class="cof" style="margin-top:14px">
+            <div class="cc"></div>
+            <div style="flex:1"><div style="font-weight:600;font-size:.9rem" class="mono" id="cardMask">Visa ···· 4242</div><div style="font-size:.78rem;color:var(--muted)">Autopay authorized</div></div>
+            <span class="pill teal" style="font-size:.7rem">On file</span>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" style="flex:1;padding:10px" onclick="payNow()">Pay early</button>
+          </div>
+        </div>
+        <div class="card pad" style="display:flex;gap:12px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:var(--good-wash);color:var(--good);display:grid;place-items:center;flex:0 0 auto"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div style="font-size:.86rem;color:var(--ink-2)">On-time payments are reported to the credit bureaus — building your score as you repay.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card pad" style="margin-top:16px">
+      <div class="section-h"><h3 style="font-size:1.05rem">Repayment schedule</h3><span class="pill teal" style="font-size:.72rem">Auto-charged</span></div>
+      <div style="overflow-x:auto">
+        <table id="schedTable">
+          <thead><tr><th>#</th><th>Date</th><th>Method</th><th class="amt">Amount</th><th style="text-align:right">Status</th></tr></thead>
+          <tbody id="schedBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPLY ============ -->
+  <section class="view" id="view-apply">
+    <div class="wiz">
+      <div class="steps" id="steps">
+        <div class="s now"></div><div class="s"></div><div class="s"></div><div class="s"></div><div class="s"></div><div class="s"></div>
+      </div>
+
+      <!-- step 1 -->
+      <div class="step active" data-step="0">
+        <div class="eyebrow">Step 1 of 6</div>
+        <h2>What do you need for rent?</h2>
+        <p class="hint">Tell us the rent you owe and when it's due. We advance up to one month's rent.</p>
+        <div class="field"><label>Monthly rent <span class="req">*</span></label><div class="money-in"><span>$</span><input id="rent" type="text" inputmode="decimal" value="1,850" oninput="calcMax()"></div></div>
+        <div class="two">
+          <div class="field"><label>Amount you need <span class="req">*</span></label><div class="money-in"><span>$</span><input id="need" type="text" inputmode="decimal" value="1,850"></div></div>
+          <div class="field"><label>Rent due date <span class="req">*</span></label><input id="due" type="date"></div>
+        </div>
+        <div class="field"><label>Landlord / property name <span class="req">*</span></label><input id="landlord" placeholder="e.g., Parkview Residences" value="Parkview Residences"></div>
+        <div class="callout" id="maxNote">We can advance up to <b>$1,850</b> based on one month's rent. Funds go straight to your landlord.</div>
+        <div class="btn-row"><button class="btn btn-primary" style="flex:1" onclick="next()">Continue</button></div>
+      </div>
+
+      <!-- step 2 -->
+      <div class="step" data-step="1">
+        <div class="eyebrow">Step 2 of 6</div>
+        <h2>About you</h2>
+        <p class="hint">Basic details so we can verify your identity and affordability.</p>
+        <div class="two">
+          <div class="field"><label>Full legal name <span class="req">*</span></label><input id="name" value="Jordan Rivera"></div>
+          <div class="field"><label>Mobile number <span class="req">*</span></label><input id="phone" value="(555) 214-8890"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Take-home pay (monthly) <span class="req">*</span></label><div class="money-in"><span>$</span><input id="income" type="text" inputmode="decimal" value="4,300" oninput="calcMax()"></div></div>
+          <div class="field"><label>Pay frequency</label><select id="freq"><option>Every 2 weeks</option><option>Twice a month</option><option>Monthly</option><option>Weekly</option></select></div>
+        </div>
+        <div class="field"><label>Home address <span class="req">*</span></label><input id="addr" value="418 Maple Court, Austin, TX 78704"></div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="prev()">Back</button><button class="btn btn-primary" style="flex:1" onclick="next()">Continue</button></div>
+      </div>
+
+      <!-- step 3 -->
+      <div class="step" data-step="2">
+        <div class="eyebrow">Step 3 of 6</div>
+        <h2>Verify &amp; protect</h2>
+        <p class="hint">These checks let us approve you safely and keep your rate low. Tap each to simulate.</p>
+        <div class="verify-item" id="v-id"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.2"/><path d="M14 10h4M14 14h4"/></svg></div><div class="t"><b>Confirm your identity</b><span>Government ID + selfie match (KYC)</span></div><button onclick="verify('id')">Verify</button></div>
+        <div class="verify-item" id="v-bank"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-6 9 6"/><path d="M4 10v9h16v-9M8 19v-5M12 19v-5M16 19v-5"/></svg></div><div class="t"><b>Connect your bank</b><span>Verify income &amp; cash flow (read-only)</span></div><button onclick="verify('bank')">Connect</button></div>
+        <div class="verify-item" id="v-rent"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="t"><b>Share rent history</b><span>Confirms on-time rent (optional, lifts your score)</span></div><button onclick="verify('rent')">Share</button></div>
+        <div class="callout" style="margin-top:4px">🔒 Bank-grade encryption. We use read-only access — we can never move money from your account except the repayments you authorize.</div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="prev()">Back</button><button class="btn btn-primary" style="flex:1" id="v-next" onclick="next()">Continue</button></div>
+      </div>
+
+      <!-- step 4 -->
+      <div class="step" data-step="3">
+        <div class="eyebrow">Step 4 of 6</div>
+        <h2>Card on file for autopay</h2>
+        <p class="hint">Required. Your repayments are charged automatically so you never miss one. Demo — don't enter a real card.</p>
+        <div class="field"><label>Card number <span class="req">*</span></label><input id="card" class="mono" inputmode="numeric" placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242" oninput="checkCard()"></div>
+        <div class="two">
+          <div class="field"><label>Expiry <span class="req">*</span></label><input id="exp" class="mono" placeholder="MM/YY" value="09/29" oninput="checkCard()"></div>
+          <div class="field"><label>CVC <span class="req">*</span></label><input id="cvc" class="mono" placeholder="123" value="123" oninput="checkCard()"></div>
+        </div>
+        <label class="check" style="margin-bottom:12px"><input type="checkbox" id="ach"> Also link my bank account for ACH as a backup repayment method (recommended — lowers your rate).</label>
+        <label class="check" style="margin-bottom:14px"><input type="checkbox" id="mandate" onchange="checkCard()"> <span><b>Autopay authorization.</b> I authorize RentBridge to automatically charge this card (and any backup method) for my scheduled repayments until my loan is paid in full. I can view the schedule anytime. <span class="req">*</span></span></label>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="prev()">Back</button><button class="btn btn-primary" style="flex:1" id="cardNext" onclick="next()" disabled>Review my offer</button></div>
+      </div>
+
+      <!-- step 5 -->
+      <div class="step" data-step="4">
+        <div class="eyebrow">Step 5 of 6 · Instant decision</div>
+        <h2 id="decisionTitle">You're approved</h2>
+        <p class="hint" id="decisionSub">Here's your offer. Nothing is charged until your first scheduled repayment.</p>
+        <div class="card pad" style="margin-bottom:14px">
+          <div class="gauge-wrap">
+            <div class="gauge" id="gauge"><div class="g-in"><b id="scoreNum">0</b><span>Approval score</span></div></div>
+            <div style="flex:1;min-width:180px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted);font-size:.85rem">Approved amount</span><b class="mono" id="offerAmt">$0</b></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted);font-size:.85rem">Finance fee (5%)</span><b class="mono" id="offerFee">$0</b></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted);font-size:.85rem">Total to repay</span><b class="mono" id="offerTotal">$0</b></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--muted);font-size:.85rem">Plan</span><b id="offerPlan">4 payments · every 2 weeks</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="card pad" style="margin-bottom:14px">
+          <div style="font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Your repayment schedule</div>
+          <div style="overflow-x:auto"><table><thead><tr><th>Date</th><th>Method</th><th class="amt">Amount</th></tr></thead><tbody id="offerSched"></tbody></table></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="prev()">Back</button><button class="btn btn-primary" style="flex:1" onclick="accept()">Accept &amp; send rent</button></div>
+      </div>
+
+      <!-- step 6 -->
+      <div class="step" data-step="5" style="text-align:center">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--good-wash);color:var(--good);display:grid;place-items:center;margin:8px auto 16px"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h2>Rent is on its way</h2>
+        <p class="hint" style="max-width:44ch;margin:6px auto 18px" id="confirmMsg">We've sent your rent directly to your landlord. Your autopay is set — you're all done.</p>
+        <div class="card pad" style="text-align:left;max-width:420px;margin:0 auto 18px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted)">Sent to landlord</span><b class="mono" id="c-amt">$0</b></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--muted)">First autopay</span><b id="c-first">—</b></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Card on file</span><b class="mono">Visa ···· 4242</b></div>
+        </div>
+        <button class="btn btn-primary" onclick="go('dashboard',document.querySelectorAll('.tabs button')[0])">Go to my dashboard</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="view" id="view-how">
+    <div class="eyebrow">The flow</div>
+    <h1 style="font-size:1.5rem;margin:3px 0 6px">From request to repayment</h1>
+    <p class="lead" style="margin-bottom:22px">Six stages, most of them instant. Money moves straight to the landlord, and repayment is automatic from a card on file.</p>
+
+    <div class="card pad">
+      <div class="cycle">
+        <div class="node"><div class="num">1<svg viewBox="0 0 24 24" style="display:none"></svg></div><h4>Request</h4><p>Renter enters rent, amount &amp; due date</p></div>
+        <div class="node"><div class="num">2</div><h4>Verify</h4><p>ID, bank &amp; income checks (seconds)</p></div>
+        <div class="node"><div class="num">3</div><h4>Decision</h4><p>Risk score → instant offer &amp; plan</p></div>
+        <div class="node"><div class="num">4</div><h4>Card on file</h4><p>Autopay mandate authorized</p></div>
+        <div class="node"><div class="num">5</div><h4>Disburse</h4><p>Funds paid direct to landlord</p></div>
+        <div class="node"><div class="num">6</div><h4>Auto-repay</h4><p>Card charged on schedule → closed</p></div>
+      </div>
+    </div>
+
+    <div class="flow-detail">
+      <div class="fd"><div class="n">STAGE 1</div><h4>Request</h4><p>The renter states the rent owed, the amount needed (up to one month), the due date, and the landlord. RentBridge shows the maximum advance instantly.</p></div>
+      <div class="fd"><div class="n">STAGE 2</div><h4>Verify</h4><p>Identity (KYC + selfie), bank connection for income and cash-flow, and optional rent-payment history. Read-only access — no funds can be pulled outside the authorized repayments.</p></div>
+      <div class="fd"><div class="n">STAGE 3</div><h4>Decision</h4><p>A transparent risk score combines income, rent-to-income, verification depth and rent history into an instant approved amount, fee and repayment plan aligned to the renter's payday.</p></div>
+      <div class="fd"><div class="n">STAGE 4</div><h4>Card on file &amp; mandate</h4><p>Before funding, the renter puts a card on file and signs the autopay authorization (optionally adding ACH as backup). No card, no loan.</p></div>
+      <div class="fd"><div class="n">STAGE 5</div><h4>Disburse to landlord</h4><p>Funds are sent <b>directly to the landlord</b> for the rent — never to the renter's spending account — so the money can only do the job it was borrowed for.</p></div>
+      <div class="fd"><div class="n">STAGE 6</div><h4>Automatic repayment</h4><p>The card on file is charged on each scheduled date. On-time payments are reported to the bureaus; a missed charge triggers auto-retry, the backup method, and an early-warning/hardship path. Loan closes when repaid.</p></div>
+    </div>
+
+    <div class="callout" style="margin-top:16px">⏱️ <b>Timing:</b> a complete request is typically approved in under two minutes, with rent disbursed to the landlord the same day — fast enough to beat a rent deadline.</div>
+  </section>
+
+  <!-- ============ LENDER CONTROLS ============ -->
+  <section class="view" id="view-lender">
+    <div class="eyebrow">Bank / lender view</div>
+    <h1 style="font-size:1.5rem;margin:3px 0 6px">Controls that reduce non-repayment risk</h1>
+    <p class="lead" style="margin-bottom:20px">RentBridge is built so the lender's downside is contained at every step — from who gets approved, to where the money goes, to how it comes back.</p>
+
+    <div class="tiles" style="margin-bottom:18px">
+      <div class="tile"><div class="k">Autopay coverage</div><div class="v teal">100%</div></div>
+      <div class="tile"><div class="k">Funds ring-fenced</div><div class="v good">Direct to landlord</div></div>
+      <div class="tile"><div class="k">On-time repayment*</div><div class="v good">94%</div></div>
+      <div class="tile"><div class="k">Avg. decision time</div><div class="v">1m 40s</div></div>
+    </div>
+
+    <div class="card pad" style="margin-bottom:18px">
+      <div class="section-h"><h3 style="font-size:1.05rem">How the approval score is built</h3><span class="pill teal" style="font-size:.72rem">Transparent underwriting</span></div>
+      <div class="risk-bars">
+        <div class="rb"><span>Income &amp; stability</span><div class="bar"><i style="width:88%"></i></div><span class="n">30%</span></div>
+        <div class="rb"><span>Rent-to-income ratio</span><div class="bar"><i style="width:76%"></i></div><span class="n">25%</span></div>
+        <div class="rb"><span>Verification depth</span><div class="bar"><i style="width:70%"></i></div><span class="n">20%</span></div>
+        <div class="rb"><span>Rent-payment history</span><div class="bar"><i style="width:62%"></i></div><span class="n">15%</span></div>
+        <div class="rb"><span>Behavior / fraud signals</span><div class="bar"><i style="width:55%"></i></div><span class="n">10%</span></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin:0 0 12px">Security &amp; anti-default features</h3>
+    <div class="sec-grid" id="secGrid"></div>
+    <p class="foot" style="text-align:left;padding:14px 2px 0">*Illustrative prototype figures for demonstration, not actual portfolio performance.</p>
+  </section>
+
+  <!-- ============ FOR LANDLORDS ============ -->
+  <section class="view" id="view-landlord">
+    <div class="eyebrow">For landlords &amp; property partners</div>
+    <h1 style="font-size:1.5rem;margin:3px 0 6px">Get rent on time — every time</h1>
+    <p class="lead" style="margin-bottom:18px">Enroll your property and RentBridge pays qualifying tenants’ rent <b>directly to your account</b> on the due date. You stop chasing payments; your tenants get a safety net. It’s free for landlords.</p>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px" id="llBenefits"></div>
+
+    <div class="wiz" id="llWiz">
+      <div class="steps" id="lsteps"><div class="s now"></div><div class="s"></div><div class="s"></div></div>
+
+      <!-- L step 1 -->
+      <div class="step active" data-lstep="0">
+        <div class="eyebrow">Step 1 of 3</div>
+        <h2>Your property</h2>
+        <p class="hint">Tell us who’s receiving rent. Business or individual landlords both welcome.</p>
+        <div class="field"><label>Landlord / company name <span class="req">*</span></label><input id="ll-name" value="Parkview Residences LLC"></div>
+        <div class="two">
+          <div class="field"><label>Units managed <span class="req">*</span></label><input id="ll-units" inputmode="numeric" value="48"></div>
+          <div class="field"><label>Contact email <span class="req">*</span></label><input id="ll-email" value="ops@parkviewres.com"></div>
+        </div>
+        <div class="field"><label>Property address <span class="req">*</span></label><input id="ll-addr" value="2200 Riverside Dr, Austin, TX 78741"></div>
+        <div class="btn-row"><button class="btn btn-primary" style="flex:1" onclick="lnext()">Continue</button></div>
+      </div>
+
+      <!-- L step 2 -->
+      <div class="step" data-lstep="1">
+        <div class="eyebrow">Step 2 of 3</div>
+        <h2>Where rent lands</h2>
+        <p class="hint">The account RentBridge deposits rent into. Verified once, then reused. Demo — don’t enter real details.</p>
+        <div class="field"><label>Bank account holder <span class="req">*</span></label><input id="ll-holder" value="Parkview Residences LLC"></div>
+        <div class="two">
+          <div class="field"><label>Routing number <span class="req">*</span></label><input id="ll-routing" class="mono" inputmode="numeric" value="021000021"></div>
+          <div class="field"><label>Account number <span class="req">*</span></label><input id="ll-acct" class="mono" inputmode="numeric" value="•••• •••• 7788"></div>
+        </div>
+        <div class="verify-item" id="lv-bank" style="margin-top:4px"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-6 9 6"/><path d="M4 10v9h16v-9M8 19v-5M12 19v-5M16 19v-5"/></svg></div><div class="t"><b>Verify payout account</b><span>Instant micro-deposit check</span></div><button onclick="lverify()">Verify</button></div>
+        <div class="callout">💸 Rent is deposited straight here on the due date — the tenant’s repayment to RentBridge happens separately, so a tenant’s missed repayment never claws back your rent.</div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="lprev()">Back</button><button class="btn btn-primary" style="flex:1" onclick="lnext()">Continue</button></div>
+      </div>
+
+      <!-- L step 3 -->
+      <div class="step" data-lstep="2">
+        <div class="eyebrow">Step 3 of 3</div>
+        <h2>Invite your tenants</h2>
+        <p class="hint">Share your enrollment link. Tenants who join can request rent help in seconds — paid straight to you.</p>
+        <div class="field"><label>Your tenant enrollment link</label>
+          <div style="display:flex;gap:8px">
+            <input id="ll-link" class="mono" readonly value="rentbridge.app/j/PARKVIEW-48" style="flex:1">
+            <button class="btn btn-ghost" onclick="copyLink()" style="padding:12px 16px">Copy</button>
+          </div>
+        </div>
+        <label class="check" style="margin-bottom:12px"><input type="checkbox" id="ll-terms" onchange="document.getElementById('llFinish').disabled=!this.checked"> I agree to the RentBridge Property Partner terms and authorize deposits to the account above. <span class="req">*</span></label>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="lprev()">Back</button><button class="btn btn-primary" style="flex:1" id="llFinish" onclick="lfinish()" disabled>Activate partner account</button></div>
+      </div>
+    </div>
+
+    <!-- partner dashboard (hidden until finish) -->
+    <div id="llDash" class="hidden">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--good-wash);color:var(--good);display:grid;place-items:center;margin:6px auto 14px"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2 style="text-align:center;font-size:1.35rem">You’re enrolled</h2>
+      <p class="hint" style="text-align:center;max-width:46ch;margin:6px auto 20px">Your property partner account is active. Here’s your rent-disbursement view.</p>
+      <div class="tiles" style="margin-bottom:16px">
+        <div class="tile"><div class="k">Enrolled tenants</div><div class="v teal">12</div></div>
+        <div class="tile"><div class="k">Rent received (Sep)</div><div class="v good">$18,400</div></div>
+        <div class="tile"><div class="k">On-time rate</div><div class="v good">100%</div></div>
+        <div class="tile"><div class="k">Pending today</div><div class="v">$3,700</div></div>
+      </div>
+      <div class="card pad">
+        <div class="section-h"><h3 style="font-size:1.05rem">Incoming rent disbursements</h3><span class="pill teal" style="font-size:.72rem">Direct deposit</span></div>
+        <div style="overflow-x:auto"><table><thead><tr><th>Unit</th><th>Tenant</th><th>Date</th><th class="amt">Amount</th><th style="text-align:right">Status</th></tr></thead>
+        <tbody>
+          <tr><td>4B</td><td>J. Rivera</td><td>Sep 1</td><td class="amt">$1,850.00</td><td style="text-align:right"><span class="tag paid">Deposited</span></td></tr>
+          <tr><td>2A</td><td>M. Chen</td><td>Sep 1</td><td class="amt">$1,620.00</td><td style="text-align:right"><span class="tag paid">Deposited</span></td></tr>
+          <tr><td>7C</td><td>D. Okafor</td><td>Today</td><td class="amt">$1,975.00</td><td style="text-align:right"><span class="tag due">Sending</span></td></tr>
+          <tr><td>1D</td><td>S. Patel</td><td>Today</td><td class="amt">$1,725.00</td><td style="text-align:right"><span class="tag due">Sending</span></td></tr>
+        </tbody></table></div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="lrestart()">Enroll another property</button></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">RentBridge is a product prototype for demonstration. No real accounts, cards, or funds are processed.</div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- theme ---------- */
+function toggleTheme(){
+  const r=document.documentElement;
+  const cur=r.getAttribute('data-theme')|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  const nx=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',nx);
+  try{localStorage.setItem('rb-theme',nx)}catch(e){}
+}
+try{const t=localStorage.getItem('rb-theme'); if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+
+/* ---------- nav ---------- */
+function go(v,btn){
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected','false'));
+  if(btn)btn.setAttribute('aria-selected','true');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* ---------- helpers ---------- */
+const num=s=>parseFloat(String(s).replace(/[^\d.]/g,''))||0;
+const fmt=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt0=n=>'$'+Math.round(n).toLocaleString('en-US');
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const mdy=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+/* ---------- step 1 max ---------- */
+function calcMax(){
+  const rent=num(document.getElementById('rent').value);
+  const income=num(document.getElementById('income')?.value||0);
+  let max=rent;
+  if(income){ max=Math.min(rent, Math.round(income*0.5)); }
+  document.getElementById('maxNote').innerHTML='We can advance up to <b>'+fmt0(max)+'</b> based on one month’s rent'+(income?' and your income':'')+'. Funds go straight to your landlord.';
+}
+
+/* ---------- wizard ---------- */
+let step=0; const STEPS=6;
+function showStep(){
+  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active', +s.dataset.step===step));
+  document.querySelectorAll('#steps .s').forEach((s,i)=>{s.className='s'+(i<step?' done':i===step?' now':'');});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function next(){ if(step===4){/*from decision*/} if(step<STEPS-1){step++; if(step===4)buildOffer(); showStep();} }
+function prev(){ if(step>0){step--; showStep();} }
+
+/* verify toggles */
+const vstate={id:false,bank:false,rent:false};
+function verify(k){vstate[k]=true;document.getElementById('v-'+k).classList.add('done');const b=document.querySelector('#v-'+k+' button');b.textContent='Verified ✓';toast(k==='bank'?'Bank connected — income confirmed':k==='id'?'Identity confirmed':'Rent history shared');}
+
+/* card gating */
+function checkCard(){
+  const c=document.getElementById('card').value.replace(/\s/g,'');
+  const exp=document.getElementById('exp').value;
+  const cvc=document.getElementById('cvc').value;
+  const ok=c.length>=15 && /\d\d\/\d\d/.test(exp) && cvc.length>=3 && document.getElementById('mandate').checked;
+  document.getElementById('cardNext').disabled=!ok;
+}
+
+/* ---------- offer ---------- */
+let offer={};
+function score(){
+  const income=num(document.getElementById('income').value);
+  const rent=num(document.getElementById('rent').value);
+  const need=Math.min(num(document.getElementById('need').value), rent);
+  let s=52;
+  const rti=income? (need/income):1;
+  s += rti<0.3?18: rti<0.45?10: rti<0.6?2:-8;
+  s += income>5000?10: income>3500?7: income>2200?3:0;
+  s += vstate.id?6:0; s += vstate.bank?10:0; s += vstate.rent?8:0;
+  s += document.getElementById('ach').checked?4:0;
+  s += 5; /* card on file mandate */
+  return Math.max(38,Math.min(97,Math.round(s)));
+}
+function buildOffer(){
+  const rent=num(document.getElementById('rent').value);
+  const need=Math.min(num(document.getElementById('need').value), rent);
+  const income=num(document.getElementById('income').value);
+  const approved=Math.min(need, income?Math.round(income*0.5):need);
+  const fee=approved*0.05, total=approved+fee;
+  const freq=document.getElementById('freq').value;
+  const n = freq==='Monthly'?3:4;
+  const interval = freq==='Monthly'?30:14;
+  const per=total/n;
+  const due=document.getElementById('due').value? new Date(document.getElementById('due').value): new Date();
+  const start=addDays(new Date(), interval);
+  const sched=[]; for(let i=0;i<n;i++){sched.push({date:addDays(start,i*interval),amt:per});}
+  const sc=score();
+  offer={approved,fee,total,n,interval,per,sched,score:sc,landlord:document.getElementById('landlord').value||'your landlord'};
+
+  // render decision
+  document.getElementById('offerAmt').textContent=fmt(approved);
+  document.getElementById('offerFee').textContent=fmt(fee);
+  document.getElementById('offerTotal').textContent=fmt(total);
+  document.getElementById('offerPlan').textContent=n+' payments · '+(freq==='Monthly'?'monthly':'every 2 weeks');
+  const g=document.getElementById('gauge'); g.style.setProperty('--v',sc);
+  let cur=0; const iv=setInterval(()=>{cur+=3; if(cur>=sc){cur=sc;clearInterval(iv);} document.getElementById('scoreNum').textContent=cur;},18);
+  const tier= sc>=75?'low risk': sc>=60?'moderate risk':'referred for review';
+  document.getElementById('decisionSub').textContent='Approved · '+tier+'. Nothing is charged until your first scheduled repayment.';
+  const ob=document.getElementById('offerSched'); ob.innerHTML='';
+  sched.forEach(p=>{ob.innerHTML+='<tr><td>'+mdy(p.date)+'</td><td>Visa ···· 4242</td><td class="amt">'+fmt(p.amt)+'</td></tr>';});
+}
+
+/* ---------- accept -> dashboard ---------- */
+function accept(){
+  const loan={
+    amt:offer.approved, total:offer.total, per:offer.per, n:offer.n, interval:offer.interval,
+    landlord:offer.landlord, sched:offer.sched.map(p=>({date:p.date.toISOString(),amt:p.amt,paid:false})),
+    funded:new Date().toISOString(), score:offer.score, example:false
+  };
+  try{localStorage.setItem('rb-loan',JSON.stringify(loan))}catch(e){}
+  document.getElementById('c-amt').textContent=fmt(offer.approved);
+  document.getElementById('c-first').textContent=mdy(offer.sched[0].date);
+  document.getElementById('confirmMsg').textContent='We’ve sent '+fmt(offer.approved)+' directly to '+offer.landlord+'. Your autopay is set — you’re all done.';
+  renderDash(loan);
+  step=5; showStep();
+}
+
+/* ---------- dashboard render ---------- */
+function renderDash(loan){
+  if(!loan){ // example
+    const start=addDays(new Date(),-26);
+    loan={amt:1850,total:1942.5,per:485.625,n:4,interval:14,landlord:'Parkview Residences',
+      funded:start.toISOString(),score:82,example:true,
+      sched:[0,1,2,3].map(i=>({date:addDays(start,i*14).toISOString(),amt:485.625,paid:i<2}))};
+  }
+  document.getElementById('exampleTag').style.display=loan.example?'inline-flex':'none';
+  document.getElementById('loanAmt').textContent=fmt(loan.amt);
+  document.getElementById('landlordName').textContent=loan.landlord;
+  document.getElementById('fundedDate').textContent=mdy(new Date(loan.funded));
+  const paid=loan.sched.filter(p=>p.paid).reduce((a,p)=>a+p.amt,0);
+  const remain=loan.total-paid;
+  const paidCount=loan.sched.filter(p=>p.paid).length;
+  document.getElementById('repaidV').textContent=fmt(paid);
+  document.getElementById('remainV').textContent=fmt(Math.max(0,remain));
+  document.getElementById('leftV').textContent=(loan.n-paidCount)+' of '+loan.n;
+  const pct=Math.round(paid/loan.total*100);
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progBar').style.width=pct+'%';
+  const nextP=loan.sched.find(p=>!p.paid);
+  document.getElementById('nextAmt').textContent=nextP?fmt(nextP.amt):'Paid off';
+  document.getElementById('nextDate').textContent=nextP?('Charged '+mdy(new Date(nextP.date))+' · card on file'):'Loan complete 🎉';
+  document.getElementById('autopayPill').textContent=nextP?'Autopay on':'Complete';
+  const body=document.getElementById('schedBody'); body.innerHTML='';
+  loan.sched.forEach((p,i)=>{
+    const d=new Date(p.date); const isNext=!p.paid && loan.sched.findIndex(x=>!x.paid)===i;
+    const tag=p.paid?'<span class="tag paid">Paid</span>':isNext?'<span class="tag due">Next</span>':'<span class="tag sched">Scheduled</span>';
+    body.innerHTML+='<tr><td>'+(i+1)+'</td><td>'+d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</td><td class="mono">Visa ···· 4242</td><td class="amt">'+fmt(p.amt)+'</td><td style="text-align:right">'+tag+'</td></tr>';
+  });
+  window._loan=loan;
+}
+function payNow(){
+  const loan=window._loan; if(!loan)return;
+  const nextP=loan.sched.find(p=>!p.paid);
+  if(!nextP){toast('Loan is already paid off 🎉');return;}
+  nextP.paid=true;
+  if(!loan.example){try{localStorage.setItem('rb-loan',JSON.stringify(loan))}catch(e){}}
+  renderDash(loan); toast('Payment made — thanks! Reported to bureaus.');
+}
+
+/* ---------- security features ---------- */
+const SEC=[
+  ['Direct-to-landlord disbursement','Funds are paid straight to the landlord for rent, never to the renter’s spending account.','Removes diversion &amp; misuse risk','shield'],
+  ['Mandatory card on file + autopay','A card is required and a recurring autopay mandate is signed before funding.','Guarantees a repayment rail','card'],
+  ['ACH backup + smart retries','Optional linked bank account backs up the card; failed charges auto-retry on payday.','Cuts involuntary misses','repeat'],
+  ['Income &amp; cash-flow underwriting','Bank connection verifies real income and affordability, not just a stated figure.','Prevents over-lending','bank'],
+  ['Affordability caps','Advance limited to one month’s rent and a share of verified income.','Keeps exposure per renter low','gauge'],
+  ['Payday-aligned installments','Repayments land right after the renter is paid, when funds are present.','Raises on-time success','calendar'],
+  ['Credit-bureau reporting','On-time repayment builds credit; default is reported.','Strong repay incentive','trend'],
+  ['KYC, fraud &amp; device checks','Identity, selfie match, velocity limits and device signals screen out fraud.','Blocks first-party &amp; synthetic fraud','fingerprint'],
+  ['Rent-history verification','Optional proof of prior on-time rent sharpens the risk score.','Better risk selection','check'],
+  ['Early-warning &amp; hardship path','At-risk accounts get proactive outreach and restructuring before default.','Recovers would-be losses','life']
+];
+const SVG={
+  shield:'<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>',
+  card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
+  repeat:'<path d="M17 2l4 4-4 4"/><path d="M21 6H7a4 4 0 00-4 4v1"/><path d="M7 22l-4-4 4-4"/><path d="M3 18h14a4 4 0 004-4v-1"/>',
+  bank:'<path d="M3 10l9-6 9 6"/><path d="M4 10v9h16v-9M8 19v-5M12 19v-5M16 19v-5"/>',
+  gauge:'<path d="M12 13l4-4"/><path d="M3 13a9 9 0 0118 0"/>',
+  calendar:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+  trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v5h-5"/>',
+  fingerprint:'<path d="M12 11a2 2 0 012 2v1a5 5 0 01-5 5"/><path d="M7 12a5 5 0 019.5-2"/><path d="M12 7a5 5 0 015 5v2"/>',
+  check:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>',
+  life:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5 5l3.5 3.5M15.5 15.5L19 19M19 5l-3.5 3.5M8.5 15.5L5 19"/>'
+};
+(function(){const g=document.getElementById('secGrid');SEC.forEach(s=>{
+  g.innerHTML+='<div class="sec"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+SVG[s[3]]+'</svg></div><div><h4>'+s[0]+'</h4><p>'+s[1]+'</p><span class="impact">'+s[2]+'</span></div></div>';
+});})();
+
+/* ---------- landlord flow ---------- */
+const LLB=[
+  ['On-time, in full','RentBridge fronts qualifying rent so it arrives on the due date.','clock'],
+  ['Paid direct to you','Deposited to your account — no chasing tenants for payment.','bank'],
+  ['Free for landlords','No fees to receive rent through the platform.','tag'],
+  ['Fewer late notices','A safety net for tenants means fewer late payments and evictions.','shield']
+];
+const LSVG={clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bank:SVG.bank,tag:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',shield:SVG.shield};
+(function(){const g=document.getElementById('llBenefits');LLB.forEach(b=>{
+  g.innerHTML+='<div class="card pad" style="display:flex;flex-direction:column;gap:8px"><div class="si" style="width:36px;height:36px;border-radius:9px;background:var(--teal-wash);color:var(--teal-d);display:grid;place-items:center"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+LSVG[b[2]]+'</svg></div><div style="font-family:var(--disp);font-weight:600;font-size:.95rem">'+b[0]+'</div><div style="font-size:.84rem;color:var(--ink-2)">'+b[1]+'</div></div>';
+});})();
+let lstep=0; const LSTEPS=3;
+function lshow(){document.querySelectorAll('[data-lstep]').forEach(s=>s.classList.toggle('active',+s.dataset.lstep===lstep));
+  document.querySelectorAll('#lsteps .s').forEach((s,i)=>{s.className='s'+(i<lstep?' done':i===lstep?' now':'');});window.scrollTo({top:220,behavior:'smooth'});}
+function lnext(){if(lstep<LSTEPS-1){lstep++;lshow();}}
+function lprev(){if(lstep>0){lstep--;lshow();}}
+function lverify(){const el=document.getElementById('lv-bank');el.classList.add('done');el.querySelector('button').textContent='Verified ✓';toast('Payout account verified');}
+function copyLink(){const v=document.getElementById('ll-link').value;navigator.clipboard&&navigator.clipboard.writeText(v);toast('Enrollment link copied');}
+function lfinish(){document.getElementById('llWiz').classList.add('hidden');document.querySelector('#view-landlord .grid').classList.add('hidden');document.getElementById('llDash').classList.remove('hidden');window.scrollTo({top:120,behavior:'smooth'});toast('Partner account activated 🎉');}
+function lrestart(){document.getElementById('llDash').classList.add('hidden');document.getElementById('llWiz').classList.remove('hidden');document.querySelector('#view-landlord .grid').classList.remove('hidden');lstep=0;lshow();document.getElementById('ll-terms').checked=false;document.getElementById('llFinish').disabled=true;}
+
+/* ---------- init ---------- */
+(function(){
+  // due date default = 5 days out
+  document.getElementById('due').value=addDays(new Date(),5).toISOString().slice(0,10);
+  let saved=null; try{saved=JSON.parse(localStorage.getItem('rb-loan')||'null')}catch(e){}
+  renderDash(saved);
+  calcMax(); checkCard();
+})();
+</script>
